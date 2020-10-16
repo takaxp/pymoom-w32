@@ -5,9 +5,20 @@ import math
 win32offset=(-7,0,0,0)
 shift_amount=(200, 200)
 menu_bar=(0, 33)
+disable_apps=['emacs', 'File Explorer']
+
+def moom_available_windows(hwnd):
+    result = True
+    name = win32gui.GetWindowText(hwnd)
+    for app in disable_apps:
+        if (app in name):
+            result = False
+    return result;
 
 def moom_move_frame():
     hwnd = win32gui.GetForegroundWindow()
+    if not (moom_available_windows(hwnd)):
+        return
     left, top, right, bottom = win32gui.GetWindowRect(hwnd)
     win32gui.MoveWindow(hwnd,
                         win32offset[0],
@@ -19,6 +30,8 @@ def moom_move_frame():
 
 def moom_move_frame_left():
     hwnd=win32gui.GetForegroundWindow()
+    if not (moom_available_windows(hwnd)):
+        return
     left, top, right, bottom = win32gui.GetWindowRect(hwnd)
     win32gui.MoveWindow(hwnd,
                         left-shift_amount[0],
@@ -30,6 +43,8 @@ def moom_move_frame_left():
 
 def moom_move_frame_right():
     hwnd=win32gui.GetForegroundWindow()
+    if not (moom_available_windows(hwnd)):
+        return
     left, top, right, bottom = win32gui.GetWindowRect(hwnd)
     win32gui.MoveWindow(hwnd,
                         left+shift_amount[1],
@@ -41,6 +56,8 @@ def moom_move_frame_right():
 
 def moom_move_frame_center():
     hwnd=win32gui.GetForegroundWindow()
+    if not (moom_available_windows(hwnd)):
+        return
     fleft, ftop, right, bottom = win32gui.GetWindowRect(hwnd)
     fwidth=right-fleft
     fheight=bottom-ftop
@@ -55,6 +72,8 @@ def moom_move_frame_center():
 
 def moom_move_frame_to_edge_top():
     hwnd=win32gui.GetForegroundWindow()
+    if not (moom_available_windows(hwnd)):
+        return
     left, top, right, bottom = win32gui.GetWindowRect(hwnd)
     win32gui.MoveWindow(hwnd,
                         left,
@@ -66,6 +85,8 @@ def moom_move_frame_to_edge_top():
 
 def moom_move_frame_to_edge_bottom():
     hwnd=win32gui.GetForegroundWindow()
+    if not (moom_available_windows(hwnd)):
+        return
     left, top, right, bottom = win32gui.GetWindowRect(hwnd)
     screen=win32gui.GetWindowRect(win32gui.GetDesktopWindow())
     win32gui.MoveWindow(hwnd,
@@ -83,6 +104,7 @@ try:
     keyboard.add_hotkey('alt+2', moom_move_frame_center)
     keyboard.add_hotkey('f1', moom_move_frame_to_edge_top)
     keyboard.add_hotkey('shift+f1', moom_move_frame_to_edge_bottom)
+
 except:
     pass
 
