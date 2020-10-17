@@ -17,7 +17,7 @@ exclude_apps=['Emacs'] # 'CabinetWClass'=explore.exe
 apps = {'emacs' : [r'C:\Apps\emacs-27.1-x86_64\bin\runemacs.exe', ''],
         'mintty' : [r'C:\cygwin64\bin\mintty.exe',
                     r' -i /Cygwin-Terminal.ico -'],
-        'explorer' : [r'C:\Windows\explorer.exe']}
+        'explorer' : [r'C:\Windows\explorer.exe', '']}
 ###############################################################################
 
 # Utilities
