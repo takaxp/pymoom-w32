@@ -6,7 +6,7 @@ import win32process
 import subprocess
 import keyboard
 
-pymoom_w32='0.9.0'
+pymoom_w32='0.9.1'
 
 ###############################################################################
 # User variables
@@ -14,9 +14,10 @@ win32offset=(-7,0,0,0)
 shift_amount=(200, 200)
 menu_bar=(0, 33)
 exclude_apps=['Emacs'] # 'CabinetWClass'=explore.exe
-apps = {'emacs' : r'C:\Apps\emacs-27.1-x86_64\bin\runemacs.exe',
-        'mintty' : r'C:\cygwin64\bin\mintty.exe',
-        'explorer' : r'C:\Windows\explorer.exe'}
+apps = {'emacs' : [r'C:\Apps\emacs-27.1-x86_64\bin\runemacs.exe', ''],
+        'mintty' : [r'C:\cygwin64\bin\mintty.exe',
+                    r' -i /Cygwin-Terminal.ico -'],
+        'explorer' : [r'C:\Windows\explorer.exe']}
 ###############################################################################
 
 # Utilities
@@ -74,7 +75,7 @@ def moom_launch_application(app, dup):
     if not app in apps:
         print(app+" is not listed")
         return
-    if not os.path.exists(apps[app]):
+    if not os.path.exists(apps[app][0]):
         print(apps[app]+" does not exist")
         return
 
@@ -84,7 +85,7 @@ def moom_launch_application(app, dup):
             moom_focus(p)
             return
 
-    subprocess.Popen(apps[app])
+    subprocess.Popen(apps[app][0]+apps[app][1])
     pid = moom_process_exist(app)
     moom_focus(pid)
     print("Starting "+app+".exe ("+str(pid)+")")
