@@ -57,7 +57,6 @@ def moom_focus(pid):
                     moom_disable_emacs_keybinding()
                 else:
                     moom_enable_emacs_keybinding()
-            print('done')
     except:
         pass
 
