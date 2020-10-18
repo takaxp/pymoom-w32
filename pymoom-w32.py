@@ -1,13 +1,12 @@
 import os
 import csv
-import time
 import math
 import win32gui
 import win32process
 import subprocess
 import keyboard
 
-pymoom_w32='0.9.2'
+pymoom_w32='0.9.1'
 
 ###############################################################################
 # User variables
@@ -22,7 +21,8 @@ apps = {'emacs' : [r'C:\Apps\emacs-27.1-x86_64\bin\runemacs.exe', ''],
 ###############################################################################
 
 # Utilities
-def moom_on_emacs(hwnd):
+def moom_on_emacs():
+    hwnd = win32gui.GetForegroundWindow()
     className = win32gui.GetClassName(hwnd)
     if 'Emacs' in className:
         return True
@@ -53,10 +53,6 @@ def moom_focus(pid):
             hwnds = moom_get_hwnds(pid)
             if len(hwnds) > 0:
                 win32gui.SetForegroundWindow(hwnds[0])
-                if moom_on_emacs(hwnds[0]):
-                    moom_disable_emacs_keybinding()
-                else:
-                    moom_enable_emacs_keybinding()
     except:
         pass
 
@@ -90,7 +86,6 @@ def moom_launch_application(app, dup):
             return
 
     subprocess.Popen(apps[app][0]+apps[app][1])
-    time.sleep(1.0) # FIXME
     pid = moom_process_exist(app)
     moom_focus(pid)
     print("Starting "+app+".exe ("+str(pid)+")")
@@ -189,13 +184,8 @@ def moom_update_keybinding():
 
 
 # Emacs keybinding
-emacs_keybind_state=False
 def moom_enable_emacs_keybinding():
-    global emacs_keybind_state
-    if emacs_keybind_state:
-        return
     try:
-        emacs_keybind_state=True
         print("--- Enable emacs keybinding")
         keyboard.remap_hotkey('ctrl+a', 'home')
         keyboard.remap_hotkey('ctrl+e', 'end')
@@ -210,11 +200,7 @@ def moom_enable_emacs_keybinding():
         pass
 
 def moom_disable_emacs_keybinding():
-    global emacs_keybind_state
-    if not emacs_keybind_state:
-        return
     try:
-        emacs_keybind_state=False
         print("--- Disable emacs keybinding")
         keyboard.remove_hotkey('ctrl+a')
         keyboard.remove_hotkey('ctrl+e')
@@ -252,9 +238,9 @@ try:
     keyboard.add_hotkey('ctrl+alt+enter',
                         moom_launch_application, args=['explorer',True],
                         trigger_on_release=True, suppress=True)
-    keyboard.add_hotkey('windows+up',
+    keyboard.add_hotkey('windows+8',
                         moom_enable_emacs_keybinding, suppress=True)
-    keyboard.add_hotkey('windows+down',
+    keyboard.add_hotkey('windows+0',
                         moom_disable_emacs_keybinding, suppress=True)
 except:
     pass
